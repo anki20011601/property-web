@@ -1,6 +1,63 @@
-import React from 'react'
+import { React, useEffect} from 'react'
+import { useForm } from 'react-hook-form'
 
 function ContactSectionComponent() {
+   const { register, handleSubmit, 
+           formState, reset 
+          } = useForm({
+              defaultValues: {
+                  name: "",
+                  email: "",
+                  subject: 34,
+                  message: "",  
+              }
+
+          });
+
+   const { errors } = formState;
+
+   const onSubmit = async (data) => {
+          console.log(data);
+          try {
+
+          const response = await fetch("https://your-api-url.com/contact", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          });
+
+
+          const result = await response.json();
+
+
+          if(response.ok){
+            console.log("Message Sent Successfully", result);
+
+            alert("Your message has been sent successfully!");
+
+            reset(); // clear form after submit
+          }
+          else{
+            console.log("API Error:", result);
+            alert("Something went wrong!");
+          }
+
+        } catch(error){
+
+          console.log("Network Error:", error);
+          alert("Server not reachable!");
+
+        }
+
+   }
+
+   const onErrors = (errors) => {
+     console.log("Errors : ", errors);
+   }
+ 
+
   return (
     <>
       <div className="contact section">
@@ -38,31 +95,72 @@ function ContactSectionComponent() {
             </div>
           </div>
         </div>
+
+        {/* contact form start*/}
         <div className="col-lg-5">
-          <form id="contact-form" action="" method="post">
+          <form id="contact-form" onSubmit={handleSubmit(onSubmit, onErrors)}>
             <div className="row">
               <div className="col-lg-12">
                 <fieldset>
                   <label htmlFor="name">Full Name</label>
-                  <input type="name" name="name" id="name" placeholder="Your Name..." autoComplete="on" required />
+                  <input type="text" name="name" id="name" placeholder="Your Name..." autoComplete="on"
+                    { ...register("name", {
+                      required: 'Name is required.',
+                    })}  />
+                    {errors.name && <p className="error">{errors.name?.message}</p>}
                 </fieldset>
               </div>
               <div className="col-lg-12">
                 <fieldset>
                   <label htmlFor="email">Email Address</label>
-                  <input type="text" name="email" id="email" pattern="[^ @]*@[^ @]*" placeholder="Your E-mail..." required="" />
+                  <input type="text" name="email" id="email" placeholder="Your E-mail..." 
+                    { ...register("email", {
+                      required: 'Email is required.',
+                       pattern: {
+                          value: /^[^@ ]+@[^@ ]+\.[^@ .]{2,}$/,
+                          message: 'Invalid email address'
+                      },
+                      //this is a cutom validation
+                      validate:{ 
+                        notAdminEmail: (value) => {
+                        return(
+                        value !== "admin@example.com" || "Enter a diffreent email address."
+                        )}},
+                        // notBloackListedEmail: (value) => {
+                        //     return(
+                        //       !value.endsWith("@yopmail.com") || "This domain is not allowed."
+                        //     )
+                        // },
+                        //to check if the email is already exists or not.....
+                        // availableEmail: async (value) => {
+                        //     const response = await fetch(`https://jsonplaceholder.typicode.com/users?email=${value}`);
+                        //     const data = await response.json();
+                        //     return data.length === 0 || "Email alreaady exists."; 
+                        // },
+                    })}/>
+                    {errors.email && <p className="error">{errors.email?.message}</p>}
                 </fieldset>
               </div>
               <div className="col-lg-12">
                 <fieldset>
                   <label htmlFor="subject">Subject</label>
-                  <input type="subject" name="subject" id="subject" placeholder="Subject..." autoComplete="on" />
+                  <input type="subject" name="subject" id="subject" placeholder="Subject..." 
+                  {...register("subject", {
+                    required: "Subject is required."
+                  })}
+                  />
+                  {errors.subject && <p className="error">{ errors.subject?.message }</p>}
                 </fieldset>
               </div>
               <div className="col-lg-12">
                 <fieldset>
                   <label htmlFor="message">Message</label>
-                  <textarea name="message" id="message" placeholder="Your Message"></textarea>
+                  <textarea name="message" id="message" placeholder="Your Message"
+                   { ...register("message", {
+                    required: 'Message is required.'
+                   })}
+                  ></textarea>
+                   { errors.message && <p className="error">{ errors.message?.message }</p>}
                 </fieldset>
               </div>
               <div className="col-lg-12">
@@ -73,6 +171,8 @@ function ContactSectionComponent() {
             </div>
           </form>
         </div>
+        {/* contact form end*/}
+
       </div>
     </div>
   </div>

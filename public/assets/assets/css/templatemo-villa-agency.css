@@ -1307,9 +1307,13 @@ Contact Style
   border-radius: 22px;
   background-color: #f6f6f6;
   border: none;
-  margin-bottom: 30px;
+  /* margin-bottom: 30px; */
   font-size: 14px;
   padding: 0px 15px;
+}
+
+.contact-content #contact-form fieldset{
+  margin-bottom: 30px;
 }
 
 .contact-content #contact-form textarea {
