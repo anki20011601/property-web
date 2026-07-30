@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 function PropertiesSectionComponent() {
   return (
@@ -106,7 +107,7 @@ function PropertiesSectionComponent() {
         </div>
         <div className="col-lg-4 col-md-6">
           <div className="item">
-            <a href="property-details.html"><img src="assets/assets/images/property-06.jpg" alt="" /></a>
+            <Link to="/"><img src="assets/assets/images/property-06.jpg" alt="" /></Link>
             <span className="category">Modern Condo</span>
             <h6>$450.000</h6>
             <h4><a href="property-details.html">22 New Street Portland, OR 16540</a></h4>

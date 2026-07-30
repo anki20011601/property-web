@@ -1,9 +1,38 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import "swiper/css";
 
 const BannerSection = () => {
+  const [home, setHome] = useState({});
+   
+  useEffect(() => {
+    getHomeData();
+  }, []);
+
+
+  const getHomeData = async () => {
+       try{
+            fetch("http://127.0.0.1:8000/api/get-page-data/homepage")
+            .then((response) => response.json())
+            .then((res) => {
+              // console.log(res.data[6].section2_title1);
+               const pageData = Object.fromEntries(          //this function converts res array into an object
+                  res.data.map((item) => [item.key, item.keyValue])
+                );
+                
+                setHome(pageData);  // this will set the pageData values into home state and we can access in our jsx file
+                // console.log(home);
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+       }
+       catch(err){
+         console.log(err);
+       }
+  }
+
   return (
     <>
      <div className="main-banner">
@@ -53,7 +82,7 @@ const BannerSection = () => {
             Miami, <em>South Florida</em>
           </span>
           <h2>
-            Act Now!
+            {home.section2_title1}
             <br />
             Get the highest level penthouse
           </h2>

@@ -9,7 +9,7 @@ import VideoSectionComponent from '../components/VideoSectionComponent';
 import FunFactSectionComponent from '../components/FunFactSectionComponent';
 import BestDealSectionComponent from '../components/BestDealSectionComponent';
 import ContactSectionComponent from '../components/ContactSectionComponent';
-
+import PropertiesSectionComponent from '../components/PropertiesSectionComponent';
 
 function Home() {
   return (
@@ -25,6 +25,8 @@ function Home() {
   <BestDealSectionComponent />
 
   <ContactSectionComponent />
+  
+  <PropertiesSectionComponent />
   </>
   )
 }
